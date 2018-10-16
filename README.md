@@ -153,7 +153,7 @@ model.summary()
   <th>Date:</th>             <td>Mon, 15 Oct 2018</td> <th>  Prob (F-statistic):</th> <td>1.86e-107</td>
 </tr>
 <tr>
-  <th>Time:</th>                 <td>18:50:22</td>     <th>  Log-Likelihood:    </th> <td> -1107.2</td> 
+  <th>Time:</th>                 <td>20:19:20</td>     <th>  Log-Likelihood:    </th> <td> -1107.2</td> 
 </tr>
 <tr>
   <th>No. Observations:</th>      <td>   392</td>      <th>  AIC:               </th> <td>   2224.</td> 
@@ -307,6 +307,10 @@ def stepwise_selection(X, y,
     return included
 ```
 
+    /Users/lore.dirick/anaconda3/lib/python3.6/site-packages/statsmodels/compat/pandas.py:56: FutureWarning: The pandas.core.datetools module is deprecated and will be removed in a future version. Please use the pandas.tseries module instead.
+      from pandas.core import datetools
+
+
 
 ```python
 result = stepwise_selection(predictors, data_fin["mpg"], verbose = True)
@@ -325,8 +329,6 @@ Applying the stepwise selection on our small auto-mpg example (just starting wit
 ### Feature ranking with recursive feature elimination
 
 Scikit-learn also provides a few [functionalities for feature selection](http://scikit-learn.org/stable/modules/classes.html#module-sklearn.feature_selection). Their `Feature Ranking with Recursive Feature Elimination` selects the pre-specified $n$ most important features. See [here](http://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.RFE.html) for more information on how the algorithm works.  
-
-Do this: http://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.RFE.html
 
 
 ```python
