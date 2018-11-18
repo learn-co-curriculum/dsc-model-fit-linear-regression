@@ -20,8 +20,7 @@ The code below reiterates the steps we've taken before: we've created dummies fo
 ```python
 import pandas as pd
 import numpy as np
-data = pd.read_csv("auto-mpg.csv") 
-data['horsepower'].astype(str).astype(int)
+data = pd.read_csv("auto-mpg.csv")
 
 acc = data["acceleration"]
 logdisp = np.log(data["displacement"])
@@ -251,6 +250,7 @@ In stepwise selection, you starts with and empty model (which only includes the 
 For more information, it's worth having a look at the [wikipedia page on stepwise regression](https://en.wikipedia.org/wiki/Stepwise_regression).
 
 Unfortunately, stepwise selection is not readily available a Python library just yet. [This stackexchange post](https://datascience.stackexchange.com/questions/937/does-scikit-learn-have-forward-selection-stepwise-regression-algorithm), however, presents the code to do a stepwise selection in statsmodels.
+
 
 ```python
 import statsmodels.api as sm
