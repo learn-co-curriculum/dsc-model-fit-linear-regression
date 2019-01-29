@@ -209,7 +209,7 @@ Let's discuss some key metrics in the light of our output:
 
 $$ R^2 = 1-\dfrac{SS_{RES}}{SS_{TOT}}= \dfrac{\sum_i y_i-\hat{y_i}}{\sum_i{Y_i-\bar{y_i}}}$$
 
--  The problem with $R^2$ is that, whichever predictor you **add** to your model which will make your model more complex, will increase your $R^2$ value. It makes seem like adding a predictor is always better. The $R^2_{adj}$ penalized for this. Make sure to read [this blogpost](https://www.statisticshowto.datasciencecentral.com/adjusted-r2/) on the difference between the two to get a better sense to why use $R^2_{adj}$ !
+-  The problem with $R^2$ is that, whichever predictor you **add** to your model which will make your model more complex, will increase your $R^2$ value. That is, the model tends to overfit if we only use $R^2$ as our model fitting criterion. This is why train test split is essential and why regularization techniques are used to refine more advanced regression models. Make sure to read [this blogpost](https://www.statisticshowto.datasciencecentral.com/adjusted-r2/) on the difference between the two to get a better sense to why use $R^2_{adj}$ !
 
 
 ## The parameter estimates and p-values
@@ -218,9 +218,9 @@ Just like with single linear regression, the parameters or coefficients we're ca
 
 > The p-value represents the probability that the coefficient is actually zero.
 
-In the Statsmodels output, the p-value can be found in the column with name $P>|t|$. A popular threshols for the p-value is 0.05, where we $p<0.05$ denotes that a certain parameter is significant, and $p>0.05$ means that the parameter isn't significant.
+In the Statsmodels output, the p-value can be found in the column with name $P>|t|$. A popular threshold for the p-value is 0.05, where we $p<0.05$ denotes that a certain parameter is significant, and $p>0.05$ means that the parameter isn't significant.
 
-The two columns right to the p-value column represent the bounds associated with the 95% confidence interval. What this means is that, after having run the model, we are 95% certain that our parameter value is withing the bounds of this interval. When you chose a p-value cut-off of 0.05, there is an interesting relationship between the 95% confidence interval and the p-value: If the 95% confidence does not include 0, the p-value will be smaller than 0.05, and the parameter estimate will be significant.
+The two columns right to the p-value column represent the bounds associated with the 95% confidence interval. What this means is that, after having run the model, we are 95% certain that our parameter value is within the bounds of this interval. When you chose a p-value cut-off of 0.05, there is an interesting relationship between the 95% confidence interval and the p-value: If the 95% confidence does not include 0, the p-value will be smaller than 0.05, and the parameter estimate will be significant.
 
 ## Which variables are most important when predicting the target?
 
@@ -245,7 +245,7 @@ This means that with just 6 variables, a so-called exhaustive search of all subm
 
 ### Stepwise selection with p-values
 
-In stepwise selection, you starts with and empty model (which only includes the intercept), and each time, the variable that has an associated parameter estimate with the lowest p-value is added to the model (forward step). After adding each new variable in the model, the algorithm will look at the p-values of all the other parameter estimates which were added to the model previously, and remove them if the p-value exceeds a certain value (backward step). The algorithm stops when no variables can be added or removed given the threshold values. 
+In stepwise selection, you start with and empty model (which only includes the intercept), and each time, the variable that has an associated parameter estimate with the lowest p-value is added to the model (forward step). After adding each new variable in the model, the algorithm will look at the p-values of all the other parameter estimates which were added to the model previously, and remove them if the p-value exceeds a certain value (backward step). The algorithm stops when no variables can be added or removed given the threshold values. 
 
 For more information, it's worth having a look at the [wikipedia page on stepwise regression](https://en.wikipedia.org/wiki/Stepwise_regression).
 
@@ -383,7 +383,7 @@ print(estimators.intercept_)
 
 ### Forward selection using adjusted R-squared
 
-[This resource](https://planspace.org/20150423-forward_selection_with_statsmodels/) provides code for a forward selection procedure (much like stepwise selection, buth without a backward pass), but this time looking at the adjusted-R-squared to make decisions on which variable to add in the mode.
+[This resource](https://planspace.org/20150423-forward_selection_with_statsmodels/) provides code for a forward selection procedure (much like stepwise selection, but without a backward pass), but this time looking at the adjusted-R-squared to make decisions on which variable to add in the mode.
 
 ## Summary
 
