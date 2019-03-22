@@ -224,7 +224,7 @@ The two columns right to the p-value column represent the bounds associated with
 
 ## Which variables are most important when predicting the target?
 
- Now that you know how predictors influence the target, let's talk about selecting the right predictors for your model. It is reasonable to think that when having many potential predictors (sometimes 100s or 1000s of predictors can be available!) not only will adding all of them in largely increase computation time, it might even lead to inferior $R^2_{adj}$ or inferior predictions in general. There are several ways to approach variable selection, and we'll only touch upon this in an ad-hoc manner in this lesson. The most straightforward way is to run a model with each possible *combination* of variables and see which one results in the best metric of your choise, let's say, $R^2_{adj}$. 
+ Now that you know how predictors influence the target, let's talk about selecting the right predictors for your model. It is reasonable to think that when having many potential predictors (sometimes 100s or 1000s of predictors can be available!) not only will adding all of them in largely increase computation time, it might even lead to inferior $R^2_{adj}$ or inferior predictions in general. There are several ways to approach variable selection, and we'll only touch upon this in an ad-hoc manner in this lesson. The most straightforward way is to run a model with each possible *combination* of variables and see which one results in the best metric of your choice, let's say, $R^2_{adj}$. 
 > This is where your combinatorics knowledge comes in handy!
 
 Now, when you know about combinations, you know that the number of combinations can add up really quickly. 
@@ -241,11 +241,11 @@ You can create:
 - 6 models with 1 variable: $\dbinom{6}{1}$
 - And, technically, 1 model with no predictors: this will return a model that simply returns the mean of $Y$.
 
-This means that with just 6 variables, a so-called exhaustive search of all submodels results in having to evaluate *64 models*. Below, we'll describe 2 methods that can be use to select a submodel with the most appropriate features: **stepwise selection** on the one hand, and **feature ranking with recursive feature elimination** on the other hand.
+This means that with just 6 variables, a so-called exhaustive search of all submodels results in having to evaluate *64 models*. Below, we'll describe 2 methods that can be used to select a submodel with the most appropriate features: **stepwise selection** on the one hand, and **feature ranking with recursive feature elimination** on the other hand.
 
 ### Stepwise selection with p-values
 
-In stepwise selection, you start with and empty model (which only includes the intercept), and each time, the variable that has an associated parameter estimate with the lowest p-value is added to the model (forward step). After adding each new variable in the model, the algorithm will look at the p-values of all the other parameter estimates which were added to the model previously, and remove them if the p-value exceeds a certain value (backward step). The algorithm stops when no variables can be added or removed given the threshold values. 
+In stepwise selection, you start with an empty model (which only includes the intercept), and each time, the variable that has an associated parameter estimate with the lowest p-value is added to the model (forward step). After adding each new variable in the model, the algorithm will look at the p-values of all the other parameter estimates which were added to the model previously, and remove them if the p-value exceeds a certain value (backward step). The algorithm stops when no variables can be added or removed given the threshold values. 
 
 For more information, it's worth having a look at the [wikipedia page on stepwise regression](https://en.wikipedia.org/wiki/Stepwise_regression).
 
@@ -305,10 +305,6 @@ def stepwise_selection(X, y,
             break
     return included
 ```
-
-    /Users/lore.dirick/anaconda3/lib/python3.6/site-packages/statsmodels/compat/pandas.py:56: FutureWarning: The pandas.core.datetools module is deprecated and will be removed in a future version. Please use the pandas.tseries module instead.
-      from pandas.core import datetools
-
 
 
 ```python
