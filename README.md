@@ -12,7 +12,7 @@ You will be able to:
 
 ## R-squared and adjusted-R-squared
 
-Let's have another look at the output for our `auto-mpg` output.
+Take another look at the model summary output for the `auto-mpg` dataset.
 
 The code below reiterates the steps we've taken before: we've created dummies for our categorical variables and have log-transformed some of our continuous predictors. 
 
@@ -37,9 +37,9 @@ data_fin["acc"]= scaled_acc
 data_fin["disp"]= scaled_disp
 data_fin["horse"] = scaled_horse
 data_fin["weight"] = scaled_weight
-cyl_dummies = pd.get_dummies(data["cylinders"], prefix="cyl")
-yr_dummies = pd.get_dummies(data["model year"], prefix="yr")
-orig_dummies = pd.get_dummies(data["origin"], prefix="orig")
+cyl_dummies = pd.get_dummies(data["cylinders"], prefix="cyl", drop_first=True)
+yr_dummies = pd.get_dummies(data["model year"], prefix="yr", drop_first=True)
+orig_dummies = pd.get_dummies(data["origin"], prefix="orig", drop_first=True)
 mpg = data["mpg"]
 data_fin = pd.concat([mpg, data_fin, cyl_dummies, yr_dummies, orig_dummies], axis=1)
 ```
@@ -74,7 +74,6 @@ data_ols.head(3)
       <th>mpg</th>
       <th>acceleration</th>
       <th>weight</th>
-      <th>orig_1</th>
       <th>orig_2</th>
       <th>orig_3</th>
     </tr>
@@ -85,7 +84,6 @@ data_ols.head(3)
       <td>18.0</td>
       <td>0.238095</td>
       <td>0.720986</td>
-      <td>1</td>
       <td>0</td>
       <td>0</td>
     </tr>
@@ -94,7 +92,6 @@ data_ols.head(3)
       <td>15.0</td>
       <td>0.208333</td>
       <td>0.908047</td>
-      <td>1</td>
       <td>0</td>
       <td>0</td>
     </tr>
@@ -103,7 +100,6 @@ data_ols.head(3)
       <td>18.0</td>
       <td>0.178571</td>
       <td>0.651205</td>
-      <td>1</td>
       <td>0</td>
       <td>0</td>
     </tr>
@@ -123,7 +119,6 @@ from statsmodels.formula.api import ols
 ```python
 outcome = 'mpg'
 predictors = data_ols.drop('mpg', axis=1)
-predictors = predictors.drop("orig_3",axis=1)
 pred_sum = "+".join(predictors.columns)
 formula = outcome + "~" + pred_sum
 ```
@@ -149,10 +144,10 @@ model.summary()
   <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th> <td>   256.7</td> 
 </tr>
 <tr>
-  <th>Date:</th>             <td>Mon, 15 Oct 2018</td> <th>  Prob (F-statistic):</th> <td>1.86e-107</td>
+  <th>Date:</th>             <td>Wed, 21 Aug 2019</td> <th>  Prob (F-statistic):</th> <td>1.86e-107</td>
 </tr>
 <tr>
-  <th>Time:</th>                 <td>20:19:20</td>     <th>  Log-Likelihood:    </th> <td> -1107.2</td> 
+  <th>Time:</th>                 <td>12:26:06</td>     <th>  Log-Likelihood:    </th> <td> -1107.2</td> 
 </tr>
 <tr>
   <th>No. Observations:</th>      <td>   392</td>      <th>  AIC:               </th> <td>   2224.</td> 
@@ -172,7 +167,7 @@ model.summary()
         <td></td>          <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P>|t|</th>  <th>[0.025</th>    <th>0.975]</th>  
 </tr>
 <tr>
-  <th>Intercept</th>    <td>   22.4826</td> <td>    0.789</td> <td>   28.504</td> <td> 0.000</td> <td>   20.932</td> <td>   24.033</td>
+  <th>Intercept</th>    <td>   20.7608</td> <td>    0.688</td> <td>   30.181</td> <td> 0.000</td> <td>   19.408</td> <td>   22.113</td>
 </tr>
 <tr>
   <th>acceleration</th> <td>    5.0494</td> <td>    1.389</td> <td>    3.634</td> <td> 0.000</td> <td>    2.318</td> <td>    7.781</td>
@@ -181,10 +176,10 @@ model.summary()
   <th>weight</th>       <td>   -5.8764</td> <td>    0.282</td> <td>  -20.831</td> <td> 0.000</td> <td>   -6.431</td> <td>   -5.322</td>
 </tr>
 <tr>
-  <th>orig_1</th>       <td>   -1.7218</td> <td>    0.653</td> <td>   -2.638</td> <td> 0.009</td> <td>   -3.005</td> <td>   -0.438</td>
+  <th>orig_2</th>       <td>    0.4124</td> <td>    0.639</td> <td>    0.645</td> <td> 0.519</td> <td>   -0.844</td> <td>    1.669</td>
 </tr>
 <tr>
-  <th>orig_2</th>       <td>   -1.3095</td> <td>    0.688</td> <td>   -1.903</td> <td> 0.058</td> <td>   -2.662</td> <td>    0.043</td>
+  <th>orig_3</th>       <td>    1.7218</td> <td>    0.653</td> <td>    2.638</td> <td> 0.009</td> <td>    0.438</td> <td>    3.005</td>
 </tr>
 </table>
 <table class="simpletable">
@@ -198,9 +193,9 @@ model.summary()
   <th>Skew:</th>          <td> 0.648</td> <th>  Prob(JB):          </th> <td>6.95e-13</td>
 </tr>
 <tr>
-  <th>Kurtosis:</th>      <td> 4.322</td> <th>  Cond. No.          </th> <td>    9.59</td>
+  <th>Kurtosis:</th>      <td> 4.322</td> <th>  Cond. No.          </th> <td>    8.47</td>
 </tr>
-</table>
+</table><br/><br/>Warnings:<br/>[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
 
 
 
@@ -315,15 +310,16 @@ print(result)
 
     Add  weight                         with p-value 1.16293e-107
     Add  acceleration                   with p-value 0.000646572
+    Add  orig_3                         with p-value 0.0091813
     resulting features:
-    ['weight', 'acceleration']
+    ['weight', 'acceleration', 'orig_3']
 
 
-Applying the stepwise selection on our small auto-mpg example (just starting with the predictors weight, acceleration and the origin categorical levels), we end up with a model that just keeps the continuous variables in.
+Applying the stepwise selection on our small auto-mpg example (just starting with the predictors weight, acceleration and the origin categorical levels), we end up with a model that just keeps weight, acceleration, and orig_3.
 
 ### Feature ranking with recursive feature elimination
 
-Scikit-learn also provides a few [functionalities for feature selection](http://scikit-learn.org/stable/modules/classes.html#module-sklearn.feature_selection). Their `Feature Ranking with Recursive Feature Elimination` selects the pre-specified $n$ most important features. See [here](http://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.RFE.html) for more information on how the algorithm works.  
+Scikit-learn also provides a few [functionalities for feature selection](http://scikit-learn.org/stable/modules/classes.html#module-sklearn.feature_selection). Their `Feature Ranking with Recursive Feature Elimination` selects the pre-specified $n$ most important features. This means you must specify the number of features to retail. If this number is not provided, half are used by default. See [here](http://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.RFE.html) for more information on how the algorithm works.  
 
 
 ```python
@@ -332,7 +328,7 @@ from sklearn.feature_selection import RFE
 from sklearn.linear_model import LinearRegression
 
 linreg = LinearRegression()
-selector = RFE(linreg, n_features_to_select = 2)
+selector = RFE(linreg, n_features_to_select = 3)
 selector = selector.fit(predictors, data_fin["mpg"])
 ```
 
@@ -346,7 +342,7 @@ selector.support_
 
 
 
-    array([ True,  True, False, False])
+    array([ True,  True, False,  True])
 
 
 
@@ -360,7 +356,7 @@ selector.ranking_
 
 
 
-    array([1, 1, 2, 3])
+    array([1, 1, 2, 1])
 
 
 
@@ -373,9 +369,11 @@ print(estimators.coef_)
 print(estimators.intercept_)
 ```
 
-    [ 4.77870536 -6.26580459]
-    21.300812564199767
+    [ 5.11183657 -5.95285464  1.53951788]
+    20.841013816401674
 
+
+Note that the regression coefficients and intercept are slightly different. This is because only the 3 most important features were used in the model instead of the original 4 features. If you pass `n_features_to_select=4`, you should get the original coefficients.  
 
 ### Forward selection using adjusted R-squared
 
