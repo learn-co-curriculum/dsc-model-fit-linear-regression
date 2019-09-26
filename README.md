@@ -3,14 +3,14 @@
 
 ## Introduction
 
-In this lecture, you'll learn how to evaluate your model results, and you'll learn methods to select the appropriate features.
+In this lesson, you'll learn how to evaluate your model results, and you'll learn methods to select the appropriate features.
 
 ## Objectives
 You will be able to:
-* Analyze the results of regression and R-squared and adjusted-R-squared 
+* Analyze the results of regression and R-squared and adjusted R-squared 
 * Understand and apply forward and backward predictor selection
 
-## R-squared and adjusted-R-squared
+## R-squared and adjusted R-squared
 
 Take another look at the model summary output for the `auto-mpg` dataset.
 
@@ -20,33 +20,33 @@ The code below reiterates the steps we've taken before: we've created dummies fo
 ```python
 import pandas as pd
 import numpy as np
-data = pd.read_csv("auto-mpg.csv")
+data = pd.read_csv('auto-mpg.csv')
 
-acc = data["acceleration"]
-logdisp = np.log(data["displacement"])
-loghorse = np.log(data["horsepower"])
-logweight= np.log(data["weight"])
+acc = data['acceleration']
+logdisp = np.log(data['displacement'])
+loghorse = np.log(data['horsepower'])
+logweight = np.log(data['weight'])
 
 scaled_acc = (acc-min(acc))/(max(acc)-min(acc))	
 scaled_disp = (logdisp-np.mean(logdisp))/np.sqrt(np.var(logdisp))
 scaled_horse = (loghorse-np.mean(loghorse))/(max(loghorse)-min(loghorse))
-scaled_weight= (logweight-np.mean(logweight))/np.sqrt(np.var(logweight))
+scaled_weight = (logweight-np.mean(logweight))/np.sqrt(np.var(logweight))
 
 data_fin = pd.DataFrame([])
-data_fin["acc"]= scaled_acc
-data_fin["disp"]= scaled_disp
-data_fin["horse"] = scaled_horse
-data_fin["weight"] = scaled_weight
-cyl_dummies = pd.get_dummies(data["cylinders"], prefix="cyl", drop_first=True)
-yr_dummies = pd.get_dummies(data["model year"], prefix="yr", drop_first=True)
-orig_dummies = pd.get_dummies(data["origin"], prefix="orig", drop_first=True)
-mpg = data["mpg"]
+data_fin['acc'] = scaled_acc
+data_fin['disp'] = scaled_disp
+data_fin['horse'] = scaled_horse
+data_fin['weight'] = scaled_weight
+cyl_dummies = pd.get_dummies(data['cylinders'], prefix='cyl', drop_first=True)
+yr_dummies = pd.get_dummies(data['model year'], prefix='yr', drop_first=True)
+orig_dummies = pd.get_dummies(data['origin'], prefix='orig', drop_first=True)
+mpg = data['mpg']
 data_fin = pd.concat([mpg, data_fin, cyl_dummies, yr_dummies, orig_dummies], axis=1)
 ```
 
 
 ```python
-data_ols = pd.concat([mpg, scaled_acc, scaled_weight, orig_dummies], axis= 1)
+data_ols = pd.concat([mpg, scaled_acc, scaled_weight, orig_dummies], axis=1)
 data_ols.head(3)
 ```
 
@@ -111,7 +111,7 @@ data_ols.head(3)
 
 
 ```python
-#import statsmodels.api as sm
+# Import statsmodels.api as sm
 from statsmodels.formula.api import ols
 ```
 
@@ -119,13 +119,13 @@ from statsmodels.formula.api import ols
 ```python
 outcome = 'mpg'
 predictors = data_ols.drop('mpg', axis=1)
-pred_sum = "+".join(predictors.columns)
-formula = outcome + "~" + pred_sum
+pred_sum = '+'.join(predictors.columns)
+formula = outcome + '~' + pred_sum
 ```
 
 
 ```python
-model = ols(formula= formula, data=data_ols).fit()
+model = ols(formula=formula, data=data_ols).fit()
 model.summary()
 ```
 
@@ -144,10 +144,10 @@ model.summary()
   <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th> <td>   256.7</td> 
 </tr>
 <tr>
-  <th>Date:</th>             <td>Wed, 21 Aug 2019</td> <th>  Prob (F-statistic):</th> <td>1.86e-107</td>
+  <th>Date:</th>             <td>Thu, 26 Sep 2019</td> <th>  Prob (F-statistic):</th> <td>1.86e-107</td>
 </tr>
 <tr>
-  <th>Time:</th>                 <td>12:26:06</td>     <th>  Log-Likelihood:    </th> <td> -1107.2</td> 
+  <th>Time:</th>                 <td>13:01:06</td>     <th>  Log-Likelihood:    </th> <td> -1107.2</td> 
 </tr>
 <tr>
   <th>No. Observations:</th>      <td>   392</td>      <th>  AIC:               </th> <td>   2224.</td> 
@@ -200,16 +200,16 @@ model.summary()
 
 
 Let's discuss some key metrics in the light of our output:
-- R-squared uses a baseline model which is the worst model. This baseline model does not make use of any independent variables to predict the value of dependent variable Y. Instead it uses the mean of the observed responses of dependent variable Y and always predicts this mean as the value of Y. The mathematical formula to calculate R-squared for a linear regression line is in terms of squared errors for the fitted model and the baseline model. In the formula below, $SS_{RES}$ is the residual sum of squared errors or our model, also known as $SSE$, which is the error between the real and predicted values. $SS_{TOT}$ is the difference between real and mean y values.
+- R-squared uses a baseline model which is the worst model. This baseline model does not make use of any independent variables to predict the value of dependent variable Y. Instead it uses the mean of the observed responses of dependent variable Y and always predicts this mean as the value of Y. The mathematical formula to calculate R-squared for a linear regression line is in terms of squared errors for the fitted model and the baseline model. In the formula below, $SS_{RES}$ is the residual sum of squared errors or our model, also known as $SSE$, which is the error between the real and predicted values. $SS_{TOT}$ is the difference between real and mean $y$ values.
 
 ### $$ R^2 = 1-\dfrac{SS_{RES}}{SS_{TOT}}=1 - \dfrac{\sum_i (y_i-\hat{y_i})^2}{\sum_i {(y_i-\bar{y_i})^2}}$$
 
--  The problem with $R^2$ is that, whichever predictor you **add** to your model which will make your model more complex, will increase your $R^2$ value. That is, the model tends to overfit if we only use $R^2$ as our model fitting criterion. This is why train test split is essential and why regularization techniques are used to refine more advanced regression models. Make sure to read [this blogpost](https://www.statisticshowto.datasciencecentral.com/adjusted-r2/) on the difference between the two to get a better sense to why use $R^2_{adj}$ !
+-  The problem with $R^2$ is that, whichever predictor you **add** to your model irrespective of whether it will add any new information to the model, will increase your $R^2$ value. That is, the model tends to overfit if we only use $R^2$ as our model fitting criterion. This is why train-has test split is essential and why regularization techniques are used to refine more advanced regression models. Make sure to read [this blogpost](https://www.statisticshowto.datasciencecentral.com/adjusted-r2/) on the difference between the two to get a better sense to why use $R^2_{adj}$ !
 
 
 ## The parameter estimates and p-values
 
-Just like with single linear regression, the parameters or coefficients we're calculating have a p-value or *significance* attached to them. The interpretation of the p-value for each parameter is exactly the same as for single multiple regression: 
+Just like with simple linear regression, the parameters or coefficients we're calculating have a p-value or *significance* attached to them. The interpretation of the p-value for each parameter is exactly the same as for multiple regression: 
 
 > The p-value represents the probability that the coefficient is actually zero.
 
@@ -219,7 +219,8 @@ The two columns right to the p-value column represent the bounds associated with
 
 ## Which variables are most important when predicting the target?
 
- Now that you know how predictors influence the target, let's talk about selecting the right predictors for your model. It is reasonable to think that when having many potential predictors (sometimes 100s or 1000s of predictors can be available!) not only will adding all of them in largely increase computation time, it might even lead to inferior $R^2_{adj}$ or inferior predictions in general. There are several ways to approach variable selection, and we'll only touch upon this in an ad-hoc manner in this lesson. The most straightforward way is to run a model with each possible *combination* of variables and see which one results in the best metric of your choice, let's say, $R^2_{adj}$. 
+Now that you know how predictors influence the target, let's talk about selecting the right predictors for your model. It is reasonable to think that when having many potential predictors (sometimes 100s or 1000s of predictors can be available!) not only will adding all of them largely increase computation time, but it might even lead to inferior $R^2_{adj}$ or inferior predictions in general. There are several ways to approach variable selection, and we'll only touch upon this in an ad-hoc manner in this lesson. The most straightforward way is to run a model with each possible *combination* of variables and see which one results in the best metric of your choice, let's say, $R^2_{adj}$. 
+ 
 > This is where your combinatorics knowledge comes in handy!
 
 Now, when you know about combinations, you know that the number of combinations can add up really quickly. 
@@ -236,7 +237,7 @@ You can create:
 - 6 models with 1 variable: $\dbinom{6}{1}$
 - And, technically, 1 model with no predictors: this will return a model that simply returns the mean of $Y$.
 
-This means that with just 6 variables, a so-called exhaustive search of all submodels results in having to evaluate *64 models*. Below, we'll describe 2 methods that can be used to select a submodel with the most appropriate features: **stepwise selection** on the one hand, and **feature ranking with recursive feature elimination** on the other hand.
+This means that with just 6 variables, a so-called exhaustive search of all submodels results in having to evaluate *64 models*. Below, we'll describe two methods that can be used to select a submodel with the most appropriate features: **stepwise selection** on the one hand, and **feature ranking with recursive feature elimination** on the other hand.
 
 ### Stepwise selection with p-values
 
@@ -303,7 +304,7 @@ def stepwise_selection(X, y,
 
 
 ```python
-result = stepwise_selection(predictors, data_fin["mpg"], verbose = True)
+result = stepwise_selection(predictors, data_fin['mpg'], verbose=True)
 print('resulting features:')
 print(result)
 ```
@@ -315,11 +316,15 @@ print(result)
     ['weight', 'acceleration', 'orig_3']
 
 
+    //anaconda3/lib/python3.7/site-packages/numpy/core/fromnumeric.py:2389: FutureWarning: Method .ptp is deprecated and will be removed in a future version. Use numpy.ptp instead.
+      return ptp(axis=axis, out=out, **kwargs)
+
+
 Applying the stepwise selection on our small auto-mpg example (just starting with the predictors weight, acceleration and the origin categorical levels), we end up with a model that just keeps weight, acceleration, and orig_3.
 
 ### Feature ranking with recursive feature elimination
 
-Scikit-learn also provides a few [functionalities for feature selection](http://scikit-learn.org/stable/modules/classes.html#module-sklearn.feature_selection). Their `Feature Ranking with Recursive Feature Elimination` selects the pre-specified $n$ most important features. This means you must specify the number of features to retail. If this number is not provided, half are used by default. See [here](http://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.RFE.html) for more information on how the algorithm works.  
+Scikit-learn also provides a few [functionalities for feature selection](http://scikit-learn.org/stable/modules/classes.html#module-sklearn.feature_selection). Their *Feature Ranking with Recursive Feature Elimination* selects the pre-specified $n$ most important features. This means you must specify the number of features to retail. If this number is not provided, half are used by default. See [here](http://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.RFE.html) for more information on how the algorithm works.  
 
 
 ```python
@@ -328,8 +333,8 @@ from sklearn.feature_selection import RFE
 from sklearn.linear_model import LinearRegression
 
 linreg = LinearRegression()
-selector = RFE(linreg, n_features_to_select = 3)
-selector = selector.fit(predictors, data_fin["mpg"])
+selector = RFE(linreg, n_features_to_select=3)
+selector = selector.fit(predictors, data_fin['mpg'])
 ```
 
 Calling the `.support_` attribute tells you which variables are selected
@@ -370,15 +375,15 @@ print(estimators.intercept_)
 ```
 
     [ 5.11183657 -5.95285464  1.53951788]
-    20.841013816401674
+    20.841013816401656
 
 
-Note that the regression coefficients and intercept are slightly different. This is because only the 3 most important features were used in the model instead of the original 4 features. If you pass `n_features_to_select=4`, you should get the original coefficients.  
+Note that the regression coefficients and intercept are slightly different. This is because only the three most important features were used in the model instead of the original four features. If you pass `n_features_to_select=4`, you should get the original coefficients.  
 
 ### Forward selection using adjusted R-squared
 
-[This resource](https://planspace.org/20150423-forward_selection_with_statsmodels/) provides code for a forward selection procedure (much like stepwise selection, but without a backward pass), but this time looking at the adjusted-R-squared to make decisions on which variable to add in the mode.
+[This resource](https://planspace.org/20150423-forward_selection_with_statsmodels/) provides code for a forward selection procedure (much like stepwise selection, but without a backward pass), but this time looking at the adjusted R-squared to make decisions on which variable to add to the model.
 
 ## Summary
 
-Congrats! In this lecture, you learned about how you can perform selection methods using p-values and adjusted-R-squared.
+Congrats! In this lesson, you learned about how you can perform selection methods using p-values and adjusted R-squared.
