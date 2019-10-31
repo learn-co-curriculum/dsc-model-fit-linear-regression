@@ -3,12 +3,12 @@
 
 ## Introduction
 
-In this lesson, you'll learn how to evaluate your model results, and you'll learn methods to select the appropriate features.
+In this lesson, you'll learn how to evaluate your model results and you'll learn methods to select the appropriate features.
 
 ## Objectives
 You will be able to:
-* Analyze the results of regression and R-squared and adjusted R-squared 
-* Understand and apply forward and backward predictor selection
+* Use stepwise selection methods to determine the most important features for a model
+* Use recursive feature elimination to determine the most important features for a model
 
 ## R-squared and adjusted R-squared
 
@@ -199,10 +199,10 @@ model.summary()
 
 
 
-Let's discuss some key metrics in the light of our output:
-- R-squared uses a baseline model which is the worst model. This baseline model does not make use of any independent variables to predict the value of dependent variable Y. Instead it uses the mean of the observed responses of dependent variable Y and always predicts this mean as the value of Y. The mathematical formula to calculate R-squared for a linear regression line is in terms of squared errors for the fitted model and the baseline model. In the formula below, $SS_{RES}$ is the residual sum of squared errors or our model, also known as $SSE$, which is the error between the real and predicted values. $SS_{TOT}$ is the difference between real and mean $y$ values.
+Let's discuss some key metrics in light of our output:
+- R-squared uses a baseline model which is a naive model. This baseline model does not make use of any independent variables to predict the value of dependent variable Y. Instead it uses the mean of the observed responses of the dependent variable Y and always predicts this mean as the value of Y. The mathematical formula to calculate R-squared for a linear regression line is in terms of squared errors for the fitted model and the baseline model. In the formula below, $SS_{RES}$ is the residual sum of squared errors or our model, also known as $SSE$, which is the error between the real and predicted values. $SS_{TOT}$ is the difference between real and the mean $y$ value.
 
-### $$ R^2 = 1-\dfrac{SS_{RES}}{SS_{TOT}}=1 - \dfrac{\sum_i (y_i-\hat{y_i})^2}{\sum_i {(y_i-\bar{y_i})^2}}$$
+### $$ R^2 = 1-\dfrac{SS_{RES}}{SS_{TOT}}=1 - \dfrac{\sum_i (y_i-\hat{y_i})^2}{\sum_i {(y_i-\bar{y})^2}}$$
 
 -  The problem with $R^2$ is that, whichever predictor you **add** to your model irrespective of whether it will add any new information to the model, will increase your $R^2$ value. That is, the model tends to overfit if we only use $R^2$ as our model fitting criterion. This is why train-has test split is essential and why regularization techniques are used to refine more advanced regression models. Make sure to read [this blogpost](https://www.statisticshowto.datasciencecentral.com/adjusted-r2/) on the difference between the two to get a better sense to why use $R^2_{adj}$ !
 
@@ -386,4 +386,4 @@ Note that the regression coefficients and intercept are slightly different. This
 
 ## Summary
 
-Congrats! In this lesson, you learned about how you can perform selection methods using p-values and adjusted R-squared.
+Congrats! In this lesson, you learned about how you can perform feature selection using stepwise selection methods and recursive feature elimination.
